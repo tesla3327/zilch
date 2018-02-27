@@ -1,0 +1,20 @@
+.card {
+  margin: 5px;
+  width: 150px;
+  height: 200px;
+  border-radius: 10px;
+  border: 1px solid gray;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+}
+
+.card:hover {
+  cursor: pointer;
+}
+
+.card.locked {
+  background: peachpuff;
+}
