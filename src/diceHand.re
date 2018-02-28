@@ -47,6 +47,44 @@ let canRoll = phase =>
   | Roll(_, false) => Js.true_
   };
 
+/* let rec num = (x, list) => switch list {
+   | [] => 0
+   | [hd, ...tl] when hd == x => 1 + num(x, tl)
+   | [_, ...tl] => num(x, tl)
+   }; */
+let num = (x, list) =>
+  List.fold_left((accum, el) => el == x ? accum + 1 : accum, 0, list);
+
+let getOccurrences = list =>
+  List.map(el => (el, num(el, list)), [1, 2, 3, 4, 5, 6]);
+
+let score = die => {
+  /* Check for 3 or more of the same digit */
+  let multiples =
+    List.fold_left(
+      (accum, (el, num)) =>
+        if (num > 2) {
+          let multiplier = el == 1 ? 1000 : 100;
+          let points = el * multiplier * (num - 2);
+          accum + points;
+        } else if (el == 1) {
+          accum + num * 100;
+        } else if (el == 5) {
+          accum + num * 50;
+        } else {
+          accum;
+        },
+      0,
+      getOccurrences(die)
+    );
+  multiples;
+};
+
+/* switch (die |> getOccurrences) {
+   | [1, 1, 1, 1, 1, 1] => 1500
+   | [n, _, _, _, m, _] => n * 100 + m * 50
+   | _ => 0
+   }; */
 let make = _children => {
   ...component,
   initialState: () => {
@@ -118,6 +156,17 @@ let make = _children => {
         )
       </div>
       (ReasonReact.stringToElement(message))
+      <br />
+      (
+        ReasonReact.stringToElement(
+          "Score: "
+          ++ (
+            List.map(el => el.value, self.state.dieList)
+            |> score
+            |> string_of_int
+          )
+        )
+      )
       <button
         onClick=(_e => self.send(Roll)) disabled=(canRoll(self.state.phase))>
         (ReasonReact.stringToElement("Roll"))
