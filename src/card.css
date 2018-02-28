@@ -16,5 +16,9 @@
 }
 
 .card.locked {
-  background: peachpuff;
+  background: lightgoldenrodyellow;
+}
+
+.card.locked:hover {
+  cursor: initial;
 }
